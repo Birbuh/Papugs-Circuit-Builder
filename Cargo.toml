@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/rederer"
+    "crates/renderer",
     "packages/ui",
     "packages/web",
     "packages/desktop",
