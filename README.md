@@ -1,4 +1,10 @@
-# Development
+# Credits (for the models):
+"Double-Sided Perfboard 7×5 cm – 3D Model" (https://skfb.ly/pFBPx) by Alex human is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+
+# Dioxus default stuff: 
+
+## Development
 
 Your new workspace contains a member crate for each of the web, desktop and mobile platforms, a `ui` crate for shared components and a `api` crate for shared backend logic:
 
@@ -72,4 +78,3 @@ and serve:
 ```bash
 dx serve
 ```
-

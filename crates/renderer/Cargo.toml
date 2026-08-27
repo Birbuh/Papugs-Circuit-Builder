@@ -1,0 +1,26 @@
+[package]
+name = "papugs-renderer"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+crate-type = [
+    "rlib",
+    "cdylib",
+]
+
+[dependencies]
+wgpu = { workspace = true }
+glam = { workspace = true }
+bytemuck = { workspace = true }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+web-sys = { 
+    workspace = true, 
+    features = [
+        "Window",
+        "Document",
+        "Element",
+        "HtmlCanvasElement",
+    ],
+}
