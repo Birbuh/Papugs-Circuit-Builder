@@ -5,12 +5,10 @@ edition = "2021"
 
 [dependencies]
 dioxus = { workspace = true, features = ["router", "fullstack"] }
+dioxus-native = "0.7.10"
 ui = { workspace = true }
-
-renderer = {
-    path = "../../crates/renderer",
-    optional = true,
-}
+wgpu.workspace = true
+renderer.workspace = true
 
 [features]
 default = []
