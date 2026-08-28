@@ -24,3 +24,7 @@ bytemuck = { workspace = true }
 #         "HtmlCanvasElement",
 #     ],
 # }
+
+[dev-dependencies]
+winit = "0.30"
+pollster = "0.4"

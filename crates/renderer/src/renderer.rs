@@ -89,7 +89,7 @@ impl Renderer {
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label: Some("3D mesh pipeline layout"),
             bind_group_layouts: &[&globals_layout],
-            push_constant_ranges: &[PushConstantRange { stages: ShaderStages::FRAGMENT, range: (0..64) }] // check this if something isn't working. #1.
+            push_constant_ranges: &[]
         });
 
         let pipeline = device.create_render_pipeline(&RenderPipelineDescriptor {
