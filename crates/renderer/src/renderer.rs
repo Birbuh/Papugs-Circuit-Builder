@@ -199,7 +199,7 @@ impl Renderer {
                         depth_slice: None,
                         resolve_target: None,
                         ops: Operations {
-                            load: LoadOp::Clear(Color { r: 0.02, g: 0.025, b: 0.035, a: 1.}),
+                            load: LoadOp::Clear(Color { r: 1., g: 0., b: 1., a: 0.}),
                             store: StoreOp::Store,
                         },
                     })

@@ -1,9 +1,15 @@
+use std::time::Duration;
+
 use dioxus::prelude::*;
 
+use dioxus_native::use_wgpu;
 use ui::Navbar;
 use views::{Blog, Home};
 
+use crate::viewport::Viewport;
+
 mod views;
+mod viewport;
 mod render;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
@@ -30,7 +36,9 @@ fn App() -> Element {
         // Global app resources
         document::Link { rel: "stylesheet", href: MAIN_CSS }
 
-        Router::<Route> {}
+        // Router::<Route> {}
+
+        ModelViewport {}
     }
 }
 
@@ -51,5 +59,34 @@ fn DesktopNavbar() -> Element {
         }
 
         Outlet::<Route> {}
+    }
+}
+
+#[component]
+fn ModelViewport() -> Element {
+    let mut frame = use_signal(|| 0u64);
+
+    use_future(move || async move {
+        loop {
+            tokio::time::sleep(Duration::from_millis(17)).await;
+            frame += 1
+        }
+    });
+    
+    let paint_id = use_wgpu(|| Viewport::new(include_bytes!("../assets/breadboard.glb")));
+
+    rsx! {
+        canvas { 
+            "src": "{paint_id}",
+
+            style: "
+                display: block;
+                flex: 1;
+                width: 600;
+                height: 400;
+                min-width: 600;
+                min-height: 400;
+            ",
+        }
     }
 }

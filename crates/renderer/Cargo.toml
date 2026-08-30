@@ -13,6 +13,9 @@ crate-type = [
 wgpu = { workspace = true }
 glam = { workspace = true }
 bytemuck = { workspace = true }
+gltf = { workspace = true }
+image = { workspace = true }
+
 # wasm-bindgen = { workspace = true }
 # wasm-bindgen-futures = { workspace = true }
 # web-sys = { 

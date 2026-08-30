@@ -1,9 +1,7 @@
 use bytemuck::{Pod, Zeroable, cast_slice};
 
 use wgpu::{
-    Buffer, BufferAddress, BufferUsages, Device, VertexBufferLayout, VertexStepMode,
-    util::{BufferInitDescriptor, DeviceExt},
-    vertex_attr_array,
+    Buffer, BufferAddress, BufferUsages, Device, VertexAttribute, VertexBufferLayout, VertexStepMode, util::{BufferInitDescriptor, DeviceExt}, vertex_attr_array,
 };
 
 use std::mem::size_of;
@@ -13,14 +11,17 @@ use std::mem::size_of;
 pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
+    pub uv: [f32; 2]
 }
 
 impl Vertex {
+    pub const ATTRIBUTES: [VertexAttribute; 3] = vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x2];
     pub const LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {
-        array_stride: size_of::<Vertex>() as BufferAddress,
+        array_stride: size_of::<Self>() as BufferAddress,
         step_mode: VertexStepMode::Vertex,
-        attributes: &vertex_attr_array![ 0 => Float32x3, 1 => Float32x3,],
+        attributes: &Self::ATTRIBUTES,
     };
+    
 }
 
 pub struct GpuMesh {
@@ -30,7 +31,7 @@ pub struct GpuMesh {
 }
 
 impl GpuMesh {
-    pub fn new(device: &Device, vertices: &[Vertex], indices: &[u16]) -> Self {
+    pub fn new(device: &Device, vertices: &[Vertex], indices: &[u32]) -> Self {
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("mesh vertex buffer"),
             contents: cast_slice(vertices),
@@ -53,116 +54,140 @@ impl GpuMesh {
     // this one was copied from ChatGPT, I'm too lazy to write it all myself...
     // ########################################################################## begin
     pub const CUBE_VERTICES: &[Vertex] = &[
-        // Front +Z
+        // Front (+Z)
         Vertex {
-            position: [-1.0, -1.0, 1.0],
-            normal: [0.0, 0.0, 1.0],
+            position: [-1.0, -1.0,  1.0],
+            normal:   [ 0.0,  0.0,  1.0],
+            uv:       [ 0.0,  1.0],
         },
         Vertex {
-            position: [1.0, -1.0, 1.0],
-            normal: [0.0, 0.0, 1.0],
+            position: [ 1.0, -1.0,  1.0],
+            normal:   [ 0.0,  0.0,  1.0],
+            uv:       [ 1.0,  1.0],
         },
         Vertex {
-            position: [1.0, 1.0, 1.0],
-            normal: [0.0, 0.0, 1.0],
+            position: [ 1.0,  1.0,  1.0],
+            normal:   [ 0.0,  0.0,  1.0],
+            uv:       [ 1.0,  0.0],
         },
         Vertex {
-            position: [-1.0, 1.0, 1.0],
-            normal: [0.0, 0.0, 1.0],
+            position: [-1.0,  1.0,  1.0],
+            normal:   [ 0.0,  0.0,  1.0],
+            uv:       [ 0.0,  0.0],
         },
     
-        // Back -Z
+        // Back (-Z)
         Vertex {
-            position: [1.0, -1.0, -1.0],
-            normal: [0.0, 0.0, -1.0],
+            position: [ 1.0, -1.0, -1.0],
+            normal:   [ 0.0,  0.0, -1.0],
+            uv:       [ 0.0,  1.0],
         },
         Vertex {
             position: [-1.0, -1.0, -1.0],
-            normal: [0.0, 0.0, -1.0],
+            normal:   [ 0.0,  0.0, -1.0],
+            uv:       [ 1.0,  1.0],
         },
         Vertex {
-            position: [-1.0, 1.0, -1.0],
-            normal: [0.0, 0.0, -1.0],
+            position: [-1.0,  1.0, -1.0],
+            normal:   [ 0.0,  0.0, -1.0],
+            uv:       [ 1.0,  0.0],
         },
         Vertex {
-            position: [1.0, 1.0, -1.0],
-            normal: [0.0, 0.0, -1.0],
+            position: [ 1.0,  1.0, -1.0],
+            normal:   [ 0.0,  0.0, -1.0],
+            uv:       [ 0.0,  0.0],
         },
     
-        // Right +X
+        // Right (+X)
         Vertex {
-            position: [1.0, -1.0, 1.0],
-            normal: [1.0, 0.0, 0.0],
+            position: [1.0, -1.0,  1.0],
+            normal:   [1.0,  0.0,  0.0],
+            uv:       [0.0, 1.0],
         },
         Vertex {
             position: [1.0, -1.0, -1.0],
-            normal: [1.0, 0.0, 0.0],
+            normal:   [1.0,  0.0,  0.0],
+            uv:       [1.0, 1.0],
         },
         Vertex {
-            position: [1.0, 1.0, -1.0],
-            normal: [1.0, 0.0, 0.0],
+            position: [1.0,  1.0, -1.0],
+            normal:   [1.0,  0.0,  0.0],
+            uv:       [1.0, 0.0],
         },
         Vertex {
-            position: [1.0, 1.0, 1.0],
-            normal: [1.0, 0.0, 0.0],
+            position: [1.0,  1.0,  1.0],
+            normal:   [1.0,  0.0,  0.0],
+            uv:       [0.0, 0.0],
         },
     
-        // Left -X
+        // Left (-X)
         Vertex {
             position: [-1.0, -1.0, -1.0],
-            normal: [-1.0, 0.0, 0.0],
+            normal:   [-1.0,  0.0,  0.0],
+            uv:       [0.0, 1.0],
         },
         Vertex {
-            position: [-1.0, -1.0, 1.0],
-            normal: [-1.0, 0.0, 0.0],
+            position: [-1.0, -1.0,  1.0],
+            normal:   [-1.0,  0.0,  0.0],
+            uv:       [1.0, 1.0],
         },
         Vertex {
-            position: [-1.0, 1.0, 1.0],
-            normal: [-1.0, 0.0, 0.0],
+            position: [-1.0,  1.0,  1.0],
+            normal:   [-1.0,  0.0,  0.0],
+            uv:       [1.0, 0.0],
+        },
+        Vertex {
+            position: [-1.0,  1.0, -1.0],
+            normal:   [-1.0,  0.0,  0.0],
+            uv:       [0.0, 0.0],
+        },
+    
+        // Top (+Y)
+        Vertex {
+            position: [-1.0, 1.0,  1.0],
+            normal:   [ 0.0, 1.0,  0.0],
+            uv:       [ 0.0, 1.0],
+        },
+        Vertex {
+            position: [ 1.0, 1.0,  1.0],
+            normal:   [ 0.0, 1.0,  0.0],
+            uv:       [ 1.0, 1.0],
+        },
+        Vertex {
+            position: [ 1.0, 1.0, -1.0],
+            normal:   [ 0.0, 1.0,  0.0],
+            uv:       [ 1.0, 0.0],
         },
         Vertex {
             position: [-1.0, 1.0, -1.0],
-            normal: [-1.0, 0.0, 0.0],
+            normal:   [ 0.0, 1.0,  0.0],
+            uv:       [ 0.0, 0.0],
         },
     
-        // Top +Y
-        Vertex {
-            position: [-1.0, 1.0, 1.0],
-            normal: [0.0, 1.0, 0.0],
-        },
-        Vertex {
-            position: [1.0, 1.0, 1.0],
-            normal: [0.0, 1.0, 0.0],
-        },
-        Vertex {
-            position: [1.0, 1.0, -1.0],
-            normal: [0.0, 1.0, 0.0],
-        },
-        Vertex {
-            position: [-1.0, 1.0, -1.0],
-            normal: [0.0, 1.0, 0.0],
-        },
-    
-        // Bottom -Y
+        // Bottom (-Y)
         Vertex {
             position: [-1.0, -1.0, -1.0],
-            normal: [0.0, -1.0, 0.0],
+            normal:   [ 0.0, -1.0,  0.0],
+            uv:       [ 0.0, 1.0],
         },
         Vertex {
-            position: [1.0, -1.0, -1.0],
-            normal: [0.0, -1.0, 0.0],
+            position: [ 1.0, -1.0, -1.0],
+            normal:   [ 0.0, -1.0,  0.0],
+            uv:       [ 1.0, 1.0],
         },
         Vertex {
-            position: [1.0, -1.0, 1.0],
-            normal: [0.0, -1.0, 0.0],
+            position: [ 1.0, -1.0,  1.0],
+            normal:   [ 0.0, -1.0,  0.0],
+            uv:       [ 1.0, 0.0],
         },
         Vertex {
-            position: [-1.0, -1.0, 1.0],
-            normal: [0.0, -1.0, 0.0],
+            position: [-1.0, -1.0,  1.0],
+            normal:   [ 0.0, -1.0,  0.0],
+            uv:       [ 0.0, 0.0],
         },
     ];
     
-    pub const CUBE_INDICES: &[u16] = &[
+    pub const CUBE_INDICES: &[u32] = &[
          0,  1,  2,
          0,  2,  3,
     

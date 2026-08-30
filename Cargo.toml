@@ -14,6 +14,10 @@ dioxus = { version = "0.7.1" }
 
 renderer = { path = "crates/renderer"}
 
+# models
+gltf = { version = "1.4", features = ["import", "utils"]}
+image = "0.25"
+
 # render
 wgpu = "26"
 glam = "0.33"
@@ -25,3 +29,7 @@ web-sys = "0.3"
 # workspace
 ui = { path = "packages/ui" }
 api = { path = "packages/api" }
+
+[patch.crates-io]
+wgpu_context = { path = "patches/wgpu_context" }
+blitz-paint = { path = "patches/blitz-paint" }
