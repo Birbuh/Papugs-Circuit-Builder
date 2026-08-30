@@ -1,0 +1,5 @@
+[application]
+name = "Papugs-Ducking-Render-Engine"
+
+[web.app]
+base_path = "Papugs-Ducking-Render-Engine"
